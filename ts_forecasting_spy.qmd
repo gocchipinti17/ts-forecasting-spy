@@ -1,0 +1,443 @@
+---
+title: "Time Series Forecasting: An Exploratory Study Using S&P 500 ETF Data"
+author: "Gina Occhipinti"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+editor: visual
+---
+
+# **Time Series Forecasting: An Exploratory Study Using S&P 500 ETF Data**
+
+# Introduction
+
+Forecasting is a valuable tool in producing intelligent ideas about future occurrences. This is especially pertinent in the finance industry. Finance is a key industry of the United States economy. Understanding the movement and being able to predict the future values of financial instruments like stocks, bonds, and exchange traded funds (ETFs) is extremely valuable for those looking to profit off financial movements of these instruments. It is challenging, however, because their movements can be volatile. Theories like the efficient market hypothesis make it so, theoretically, the market has perfect or near perfect knowledge and information and can adjust to create positions (buying and selling of these securities) that end up neutral ("canceling out") any financial benefit. However, mispricing of stocks can still occur. Predicting individual stocks is one of the most difficult endeavors in modern financial forecasting because of high sensitivity of single stocks to news. ETFs are advantageous because they diversify investments across various asset classes. This is good in economic uncertainty, where investors seek a dependable income and hedge against volatility (Ngwaba, 2025). In recent years, there has been a shift towards buying ETFs. Their market cap surpassed USD 10 trillion in 2023. The shift is likely due to their benefits, including low management fees, high liquidity, and broad market exposure (Shih et al., 2024).
+
+It can be advantageous to take certain positions based on what you suspect might happen in the market before it does (i.e., buy low and sell high to make the most money). Knowing *when* to do this can be exceedingly valuable and financial forecasting can be an effective tool for this. Still academic studies show mixed results on whether past trends predict future returns (Yates, 2024).
+
+A common ETF Americans invest in is the SPY (under the ticker SPY-USA). The SPY tracks a market cap-weighted index of US large- and mid-cap stocks selected by the S&P Committee. This ETF is suitable to invest in long-term with a passive investing approach, because it tracks the popular S&P 500 US index. The S&P 500 US index represents the US "market" and diversifies an investment across many companies, reducing risk exposure while benefitting from the highs of the economic business cycle that cause share price of many of these companies to increase. Being able to predict key aspects of the SPY, such as the price, is very valuable for investors looking to understand when they should purchase shares of the ETF. For example, if you knew the price would go up in the future, you might decide it buy it now. But if you knew it would go down, you might way until the price drops before you buy and forecast again when it might increase to sell for a profit.
+
+There are several different forecasting strategies that are effective for financial data. These are typically non-seasonal methods, as stock price data does not follow a seasonal pattern and is more erratic. Hyndman and Athanasopoulos (2021) outline the following models as simple but effective in forecasting financial stock price data:
+
+-   Mean model: The forecasts of all future values are equal to the average (or “mean”) of the historical data.
+
+-   Naive model: For naive forecasts, we simply set all forecasts to be the value of the last observation.
+
+-   Drift model: A variation on the naive method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the drift) is set to be the average change seen in the historical data.
+
+These simple models are often the benchmark in evaluating other time series modeling approaches.
+
+This analysis will explore some of these methods for forecasting SPY price data, along with additional methods, such as an ETS Model, a seasonal naive (snaive), and an ensemble model that combines the forecasts of these models using averaging. This analysis will also consider external research applying other time series and machine- and deep learning-based forecasting methods and weigh the implications of these methods for stock price applications.
+
+# Literature Review
+
+The quantity of literature on forecasting methods and techniques applied to financial data is vast. The upside is too appealing. Have the ability to predict when you can make money? Who wouldn't want to do that! There are flaws with this idea, however, there is much existing research testing different methodologies to predict stock prices and returns.
+
+There are some basic theories on how to predict market performance. Yates (2024) shows how one theory is related to momentum and "not fighting the tape". This has roots in behavioral finance, where the assumption is that market movements will continue in the same direction, but only in the short-term. Over longer periods, this effects reverses. Another theory is that market prices are martingales, or a mathematical series where the best prediction for the next number is the current number. This is similar to a naive forecasting method where the forecast takes on the previous value.
+
+Academic studies have investigated ways to predict the market using both traditional time series techniques, but also machine and deep learning models, with mixed results. Pande and Kumar (2025) did a study "Forecasting Stock Indices: Stochastic and Artificial Neural Network Models" acknowledging traditional methods to forecast stock prices and indices such as stochastic time series models, such as autoregressive integrated moving average (ARIMA) and jump diffusion models. Also, they looked at modern machine learning methods such as feed forward networks (FFN) and long short-term memory (LSTM) models. This study creates models used to forecast 10, 20, 30 days ahead the prices of major stock indices in both developed and emerging markets
+
+The study used adjusted closing price as the main variable to predict. The metrics used to evaluate performance included root mean squared error (RMSE), mean absolute error (MAE), and mean absolute percentage error (MAPE). The study found that LSTM models performed best for this forecasting application over almost all indices over all time horizons except for the S&P 500 and Nikkei 225 10 days ahead. LSTM solves the problem of long-term dependence arising in temporal data and has feedback connections which allow the networks to decipher hidden patterns in the temporal data more effectively (Pande and Kumar, 2025). For these indices specifically, the autoregressive fractionally integrated moving average ARFIMA time series model performed best. ARFIMA can make up for shortcomings of long range dependent data though the model has an almost linear fit and can’t model shocks in price.
+
+In looking at the broader question of economic gains for an investor, the authors question whether prediction accuracy alone can imply economic gains. Data is not always perfect indicator of future price movements as there are other factors (i.e., macroeconomic conditions, geopolitical events) that can affect their movement. Even with effective and accurate LSTM models, high frequency trading requires high computational power, which is difficult for most average investors to obtain. A limitation of this study is that it doesn’t take into account cross correlation between two different stock indices which affects stock price movement as well (Pande and Kumar, 2025).
+
+Shih et al. (2024) wrote a journal article "Forecasting ETF Performance: A Comparative Study of Deep Learning Models and the Fama-French Three-Factor Model" comparing deep learning models to more traditional models, such as the Fama-French 3-factor models. The Fama-French models are expanded versions of the capital asset pricing model (CAPM) that tries to explain the risk and return relationship. Factors like market risk premium, book-to-market ratio, and size factor can affect accuracy of predictions. This study seeks to enhance the investment strategy toolkit by comparing the performance of these traditional models against modern deep learning methods (Shih et al., 2024).
+
+Particularly, this study looks at the return prediction of Taiwanese ETFs, using MAE as a metric to compare the performance of artificial neural networks (ANNs) and linear models. Similar to the study above, it found that LSTM has superior performance, particularly in combination with the Fama-French 3-factor model. This combination was effective at processing complex temporal patterns in daily ETF returns and integrating multifaceted variables. Some limitations with this study discussed the risk of overfitting from complex neural networks like LSTM and also the focus on MAE alone, rather than a more holistic look at metrics like MSE or RMSE. Also, the focus on a Taiwanese dataset limits generalizability to other markets.
+
+Another study, "Forecasting Covered Call Exchange-Traded Funds (ETFs) Using Time Series, Machine Learning, and Deep Learning Models" by Ngwaba (2025) takes a unique approach, being one of the first to focus on forecasting applications specifically for covered call ETFs. Covered call ETFs (like QYLD, JEPI) use a strategy of covered call writing to generate income for investors that entails selling call options on the underlying securities owned by the investor in exchange for premiums while still allowing for potential price appreciation up to the strike price of options (Ngwaba, 2025). It compares the ARIMA and heterogeneous autoregressive (HAR) models with advanced machine learning techniques like random forest, support vector regression, convolutional neural networks (CNNs), and recurring neural networks (RNNs).
+
+The study found that deep learning models are effective at identifying nonlinear patterns and temporal dependencies in price movements of covered call ETFs, outperforming traditional time series and machine learning techniques. Specifically, RNNs consistently outperformed every other model in the study, having the lowest MAPE. A limitation with this study is that deep learning models requires significant computation demands and extensive data needs. The author suggests future research to explore ensemble techniques, hybrid approaches and alternative deep learning frameworks like transformers to boost forecasting precision and dependability. Also, it suggests integrating a range of indicators like technical metrics and macroeconomic factors (Ngwaba, 2025).
+
+Our analysis in this document focuses on simpler models, addressing some of the gaps noted in existing literature that use less computational power and are thus more feasible for the average everyday investor to use. They are more accessible, especially with the availability of historical ETF price data. The models used include a naive forecasting method, which is in alignment with some existing theories of financial data performance (e.g., martingale theory). This study also explores an ensemble method, something noted as a worthy area of further exploration by Ngwaba for the forecasting ETF performance. This study specifically looks at the SPY-USA, representing the S&P 500. This is example can generalize well to other markets as U.S. finance performance has significant global influence and attracts many investors.
+
+# Methodology
+
+## Data Preparation
+
+For this investigation, I've chosen historical monthly price values for the SPY-USA: SPDR S&P 500 ETF Trust. This dataset was pulled from FactSet, a company that provides financial data and analytics tools to investment professionals and universities. The dataset contains 10 years of historical data from 2016 to 2025. Variables of the original dataset included Open, Low, High and %Change. For simplicity, I reduced the variables to just the temporal variable (month and year) and the price, referring to the closing price, which is the final traded price when the market closed that day.
+
+Preparing this dataset involved cleaning it for time series analysis, including mutating the temporal variable to be in monthly format, and identifying and handling missing values. Preparation also involved visualizing the data to under any possible patterns, like trends or seasonality, through decomposition and other visualization techniques. This provides a deeper understanding of the data to best understand how the models will perform and to interpret the results.
+
+```{r message=FALSE}
+# install package manager if needed
+if (!require("pacman")) install.packages("pacman")
+
+# Load contributed packages with pacman
+pacman::p_load(pacman, party, rio, tidyverse, tsibble, lubridate, ggplot2, feasts, fable, modeltime)
+```
+
+```{r}
+# import SPY-USA price history
+data <- read.csv("PriceHistory.csv")
+data
+```
+
+```{r}
+# change character date to date format
+data$Date <- mdy(data$Date)
+
+# convert date to month and year format
+data <- data |>
+  mutate(Date = yearmonth(Date))
+
+# turn data into a tsibble
+data <- data |>
+  as_tsibble(index = Date)
+
+# select pertinent columns - just price and date
+data <- data |>
+  select(Date, Price)
+
+# check for missing values
+sum(is.na(data))
+```
+
+Below is a chart visualizing the last 10 years of data of the SPY-USA.
+
+```{r}
+#| output: true 
+
+# create basic plot
+data |>
+  autoplot(Price) +
+  labs(y = " USD $", title = "Historical SPY USA Price")
+```
+
+The visualization shows there is a clear upward trend where the stock price data has been increasing over the past 10 years, particularly between 2020 and 2022 and again between 2022 and 2025. The visualization also indicates that the data is not seasonal, and does not repeat at fixed intervals. This is not surprising given it is stock price performance data. There are possibly some cyclical patterns here, where the chart shows some troughs (post COVID-19 drop). These are likely related to the business cycle. This makes sense as the S&P 500 tracks company performance reflective of the market.
+
+To visualize some of the peaks and troughs clearer, we can use a point plot to better see where the exact changes in price occurred throughout the months.
+
+```{r}
+#| output: true 
+
+# create point plot
+data |>
+  ggplot(aes(x=Date, y=Price)) +
+  geom_line() +
+  geom_point()
+```
+
+This visualization further confirms some of the dips in price - just before 2019, just after 2020 and 2022.
+
+Next, I created a seasonality plot just to verify any seasonality patterns in the data.
+
+```{r}
+#| output: true 
+
+# create seasonality plot
+data |>
+  gg_season(Price)
+```
+
+From this plot, it doesn't reveal any major consistent patterns. The data drops through the months as and it raises. This confirms there is no seasonality.
+
+Next, I will test for any autocorrelations in the data.
+
+```{r}
+#| output: true 
+# test autocorrelations
+data |>
+  ACF(Price, lag_max = 100) |>
+  autoplot()
+```
+
+From this visualization, we see we have very strong positive and negative correlations. As the lag increases, the autocorrelations decrease as time gradually, approaching zero, but then the pattern reverses. The gradual pattern makes sense because with ETF and stock price data, today's observation is similar to yesterday's observation, though gradually less so as time goes on. On a monthly scale, this effect is less pronounced, however. As the months increase, the next monthly price is less reliant on data months or years back. This plot also aligns well with the momentum theory discussed earlier. Stocks perform similarly in the short term (positive correlation with lower lags) but in the long term their performance reverses (negative correlation with greater lags). This plot also shows that this data has a trend as smaller lags tend to be large and positive.
+
+Where our data focuses on price data and is showing a clear upward trend, it is important to adjust for inflation, especially where some of the biggest increases align with increased inflation in the U.S. from 2022 to 2025. Adjusted ETF prices for inflation may give a more accurate picture of price movement and trends. To do so, I've used FRED monthly data on Core CPI, which is the CPI for all urban consumers less food and energy because those prices are volatile.
+
+```{r warning=FALSE, message=FALSE}
+#| output: true 
+# adjust for inflation
+# monthly CPI - used Core CPI - CPI all urban consumers all items less food and energy 
+
+# load CPI dataset
+cpi_data <- read_csv("CPILFESL.csv")
+
+# prep to join with data
+cpi_data <- cpi_data |>
+  mutate(Date = yearmonth(observation_date)) |>
+  select(-observation_date)
+
+# join data, reshape, and visualize inflation adjusted vs. not
+data |>
+  left_join(cpi_data, by = "Date") |>
+    mutate(Adjusted_Price = Price / CPILFESL * 100) |> # CPI has 100 index
+    pivot_longer(c(Price, Adjusted_Price),
+                 values_to = "Price") |>
+    mutate(name = factor(name,
+                         levels = c("Price", "Adjusted_Price"))) |>
+    ggplot(aes(x = Date, y = Price)) +
+    geom_line() +
+    facet_grid(name ~., scales = "free_y") +
+    labs(title = "Price vs. Price Adjusted for Inflation")
+
+```
+
+Overall, the adjusted ETF price data follows the same trend and cyclical patterns as the non-adjusted data. Of course, the adjusted price is lower than the inflated price, but its pattern is not significantly different. The adjusted dollars are for 1982 - 1984 as the core CPI was 100 then.
+
+Additionally, I tested other transformations like log transformations or cube root transformations to visualize if the patterns change.
+
+```{r}
+#| output: true 
+# try log of price
+data |>
+  autoplot(log(Price)) +
+  labs(title = "Log Price", y = "Log Price")
+
+# no significant difference
+
+# try cube root of price
+data |>
+  autoplot(Price^(1 / 3)) +
+  labs(title = "Cubic Root of Price", y = "Cube Root Price")
+
+# no significant difference
+```
+
+It appears that the log and cubic transformations don't cause significant change in the patterns of the data. I did not test a lambda box cox transformation because the data does not include seasonal variation.
+
+Next, I ran decomposition plots to break down the price data.
+
+```{r}
+#| output: true 
+# create STL decomposition
+dcmp <- data |>
+  model(stl = STL(Price))
+
+# get components
+components(dcmp) |>
+  autoplot()
+```
+
+The plot shows a smooth upward trend. What is surprising is that the plot does appear to show seasonality in the year to year breakdown, with an almost multiplicative effect. The remainder has lots of white noise.
+
+I then plotted the trend line of the decomposed data against that actual data to see how well it captures it.
+
+```{r}
+#| output: true 
+
+# compare decomposed trend to data
+data |> autoplot(Price, color = "gray") +
+  autolayer(components(dcmp), trend, color = "orange") +
+  labs(y = "Price Adjusted", title = "SPY USA")
+```
+
+Interestingly, when accounting for seasonality, it follows the data much better.
+
+```{r}
+#| output: true 
+
+# plot decomposed seasonally adjusted data
+data |>
+  autoplot(Price, color = "gray") +
+  autolayer(components(dcmp), season_adjust, color = "orange") +
+  labs(y = "Price Adjusted", title = "Price SPY USA")
+```
+
+Here, the trend and remainder follow the data more closely when removing seasonality.
+
+Next, I pulled some STL decomposition features to confirm what's seen above, involving a strong trend and generally low seasonality.
+
+```{r}
+# pull STL decomposition features
+data |>
+  features(Price, feat_stl) |>
+  glimpse()
+```
+
+## Model Development
+
+\
+Next I will develop the models. In order to do this, I will split the data in order to train the models and then forecast on unseen test data. I will use an 80/20 training and testing data split respectively.
+
+```{r}
+# split data - 20% 
+test_data <- data |> 
+                  filter_index("2023 Jan" ~ .)
+
+# split data - 80%
+train_data <- data |>
+                    filter_index("2015 Jul" ~ "2022 Dec")
+
+```
+
+Next I will create the following models:
+
+-   ETS Model (Auto-selected): Exponential Smoothing State Space Model with automated parameter selection.
+
+-   Naive Model
+
+-   Snaive Model: Seasonal naive model.
+
+-   Ensemble Model: Combine forecasts of the models using averaging.
+
+First, I will apply the apply the `model` function to the data and add in each corresponding model. This will create a mable, or a model table, where each cell corresponds to a fitted model. The `ETS` function in R applies automatic parameter selection to tune the model and select the best parameters.
+
+For the ETS model, I am going to use the following parameters: additive error, additive trend, and multiplicative seasonality due to the results seen in the visualizations above (essentially the Holt-Winters Model, a version of ETS). Since the raw data did not include any seasonality, I will also include an ETS model that does not have any seasonality (Holt Linear Trend model).
+
+```{r}
+# create model fit objects for Snaive, Naive, and ETS Models
+price_fit <- train_data |>
+  model(
+    Seasonal_naive = SNAIVE(Price),
+    Naive = NAIVE(Price),
+    ETS_AAN = ETS(Price ~ error("A") + trend("A") + season("N")),
+    ETS_AAM = ETS(Price ~ error("A") + trend("A") + season("M"))
+  )
+
+# create an ensemble model
+price_fit <- price_fit |> 
+    mutate(ensemble = (Seasonal_naive + Naive + ETS_AAN + ETS_AAM)/4)
+```
+
+Then, I will create a fable, or a forecast table, with point forecasts and distributions. This will create forecasts for the 5 models using the fitted objects on training data and forecasting the length of the test dataset. Then, I will compare these forecasts with actual results for the test data.
+
+```{r}
+# create forecasts
+forecasts <- price_fit |>
+                        forecast(h = nrow(test_data))
+# forecast next 12 observations ie months
+
+```
+
+## Model Evaluation
+
+After creating the forecasts for each model, I will visualize the results and explore validation metrics like RMSE and MAE as well as conduct some residual diagnostic checks.
+
+```{r}
+
+#| warning: false
+#| message: false
+#| output: true
+
+# create forecast plot
+suppressMessages({forecasts |>
+  autoplot(filter_index(data)) +
+  autolayer(test_data, color = "black") +
+  labs(y = "Price", title = "Prediction of SPY-USA Price")
+})
+
+```
+
+Then, I will pull the key metrics to evaluate the accuracy of these models and compare them with one another using root mean squared error (RMSE), mean absolute error (MAE), and mean absolute percentage error (MAPE).
+
+```{r}
+#| output: true
+
+# pull key performance metrics
+accuracy(price_fit) |>
+  arrange(.model) |>
+  select(.model, .type, RMSE, MAE, MAPE) |>
+  knitr::kable(digits = 2)
+```
+
+These metrics are important to evaluate forecasting models and have been widely used in existing literature. The RMSE squares the forecast error, takes the average, then the square root. Due to this squaring, it more heavily penalizes larger errors and generally captures typical errors and occasionally larger misses. In this case, the ETS_AAM has the best (smallest) error. On average, the ETS_AAM model misses the true value of the SPY price by \$14.86. This is interesting as it appeared to be the worst performing model from the visualization. However, it's close to our baseline naive model. Similarly, the seasonal_naive model performed the worst in this regard, where it misses the true value of the SPY price by \$55.80. This is also surprising and contrasts the appearance of a strong fit from the visualization.
+
+The MAE is another key metric. It's the average of the absolute errors and indicates how far off our models are from the average, regardless of direction. Most models performed similarly here, with both ETS models performing very closely. Again, seasonal_naive has a poor result, indicating its forecasts deviated from actual values by about \$45, where other models deviated by only \$11 to \$16.
+
+Last is the MAPE, which is the average of absolute errors, but as a percentage of the actual values, scaling the errors relative to the size of price. All models performed generally well here with seasonal_naive performing the worst. Most model forecasts are on average off the actual value from 3-5% which is low. Ideally we want small values for all 3 metrics, to have accurate models with minimal errors.
+
+Next, I will get the fitted values, residuals, and other diagnostic information from these models.
+
+```{r}
+
+# create residual diagnostics
+diag_info <- augment(price_fit)
+
+# remove NA values
+diag_info |>
+  filter((!is.na(.fitted))) |>
+  knitr::kable(digits = 2)
+```
+
+Looking at the residual table, we can see values like .fitted, .resid, and .innov. The fitted value provides the next value estimate at each time point in the training or what the model would have predicted for that month. The residual value is the difference between the actual observed value and fitted value, and the innovation residual is the error term, often analyzed to see if the models meet critical assumptions, like heteroscedasticity. At a minimum, the innovation residuals should be uncorrelated and have zero mean.
+
+```{r warning=FALSE}
+
+#| output: true
+
+# check innovation residuals
+
+suppressWarnings({autoplot(diag_info, .innov) +
+  labs(title = "Residual Plot", y = "Innov Residual")
+  })
+
+# check if innovation residuals are uncorrelated with acf plot
+diag_info |>
+  ACF(.innov) |>
+  autoplot() +
+  labs(title = "Innovation Residuals ACF")
+```
+
+We can also do more holistic residual checks on each model to see
+
+```{r warning=FALSE}
+#| output: true
+
+# create histogram plot
+ggplot(diag_info, aes(x = .resid)) +
+  geom_histogram(bins = 30, fill = "blue", color = "white") +
+  facet_wrap(~.model, scales = "free_x") +
+  labs(
+    x = "Residual",
+    y = "Count",
+    title = "Residual Distributions by Model"
+    )
+```
+
+# Results and Analysis
+
+From the results of the forecast visualization, we can see the results of the 5 models. From the visual alone, it appears the seasonal naive data captures some of the variability found in the actual test data, but it underestimates the trend. The ensemble method performs similarly, though its variation has less magnitude. The ETS_AAN (Holt Linear Trend) appears to capture more of the trend in the ETF price data, but does not have some of the seasonal variation (because we labeled it as "none" in the model). The ETS_AAM model with additive effects and multiplicative seasonality appears to perform the worst from the visualization as it forecasts a downward linear trend not present in the data. Possibly, this model is assuming more of a cyclical pattern, where the ETF price increased over the prior 2 years, thus it forecasts a decline in the following 2 years. This model also has the largest prediction interval, indicating less accuracy compared to other models.
+
+In the innovative residual plot, it showed that seasonal_naive deviated from zero the most, indicating it has the greatest error of the other models. Generally, we want residuals to hover around zero and have a roughly constant spread. It appears that no model hovers around zero consistently for the forecast years, but seasonal_naive is the worst offender with its downward trend.
+
+Similarly with the autocorrelation function plot, the seasonal_naive model shows values outside of the confidence bans. All other innovation residuals are generally within the accepted ranges, indicating the residuals behave like white noise and there is not some information missing from the model causing the systematic errors. The ensemble model stays within the bounds but shows similar behavior from the seasonal_naive data, likely being influenced from using this model in its average.
+
+Checking the normality of the distribution of the innovation residuals, we can see that most of them are normally distributed, except for the ETS models. The seasonal_naive model appears to be normal but with a significant peak compared to the rest of the data.
+
+Based on the results, visualizations and residual checks, there are varied results but overall the ETS and naive models appear to perform best. Exponential smoothing involves the weighted averaging of past observations where the weights decay exponentially with time. ETS models are flexible to include trend and seasonality and allows for explicit modeling of errors and uncertainty (Lee, 2025). The ETS model, incorporating various smoothing techniques into the state space framework, allows the model to adapt to data variability. The core idea with these models is to balance the trade-off between model flexibility and overfitting. The flexibility of these models is partially based on using the smoothing parameter, α. Heavier smoothing (lower α values) might be suitable for more stable environments, whereas lower smoothing (higher α values) can be applied to more volatile data (Lee, 2025). In our case of ETF pricing, we have more volatile data so a higher α value is more appropriate.
+
+ETS models are effective because they can capture the baseline level pattern, but also incorporate trend or seasonality (or both) as is witnessed in the data. The naive model does not capture any sort of trend, so while it wasn't as far off in prediction accuracy and residual errors, it also didn't capture the patterns found in the data as well as the ETS model. It did serve as an effective comparative baseline, however. The seasonal naive model tried to capture effects that weren't present in the raw data (though they appeared present in the decomposed data). This was an inappropriate method in forecasting stock price data because while it captured some historical variation, it returned higher errors compared to other models. The ensemble model ranked closed to last in the plots, residual checks, and accuracy metrics, likely being affected by the poor results of the seasonal_naive model being part of the ensemble to capture the average.
+
+# Discussion
+
+The forecasting process is one with numerous options, that have different levers in order to build a model that fits the data and thus captures the events and patterns that are happening in such a way that it can predict what will happen in the future with accuracy.
+
+With numerous models available to capture data patterns like trends, seasonality, and baseline data levels, it's important to consider the data structure and behavior to pick the best model. In comparing different models, it's also key to use simple baseline models, such as naive models or seasonal naive models, when appropriate.
+
+What this study does is consider a popular financial investment, such as the SPY-USA ETF that tracks the S&P 500 and the different models that can effectively forecast performance. This study focused on more obtainable, low computational forecasting methods for tech savvy and statistically minded investors. This study can be generalized to many American and global investors who want to benefit from the performance of the S&P 500. It also explores an ensemble model, something mentioned as an area of further exploration by other authors in the field.
+
+There are some limitations and challenges in this study. It doesn't consider more advanced machine learning or deep learning models that other studies consider. While it does explore ensemble methods that average results from many models, it doesn't include hybrid models that may have produced better results, like ETS_AAN and LSTM hybrid. Another limitation of this study is it doesn't take into account other factors that could influence ETF performance that are challenging to model, such as involvement in war, tariffs, and other geopolitical factors.
+
+Investors should consider simple and moderately complex models like naive and exponential smoothing as information to incorporate into investment decisions, like when to invest (or not) in the S&P 500. Investors should not rely solely on these forecasts as they don't completely model stock market patterns accurately, but should incorporate some judgmental forecasting techniques to make more holistic investment decisions.
+
+# Conclusion
+
+This study compares forecasting methods (naive, seasonal naive, ETS, and an ensemble), on 10 years of monthly SPY‑USA data. Overall, the additive and multiplicative ETS models (both Holt Linear and Holt–Winters) and the basic naive model delivered the smallest forecast errors (MAE and RMSE) and residuals consistent with assumptions. The seasonal naive approach under‑predicted the strong upward trend and exhibited autocorrelated residuals, making it the least reliable. The ensemble model offered modest gains over its weak seasonal component but was still dragged down by that model’s bias.
+
+Often, simple models suffice when it comes to financial instrument forecasting, particularly long-term ones like the SPY. Naive forecasts provide a reasonable baseline while ETS models add flexibility by capturing trends. Also, it's import to match a model's form to its data structure so exploratory analysis and decomposition efforts in the beginning are crucial.
+
+Limitations of this work include its focus on univariate historical prices and omission of exogenous factors (e.g. macroeconomic indicators or sentiment data), as well as more advanced machine‑ and deep‑learning approaches. Future extensions might explore hybrid ETS–LSTM models, incorporate technical or fundamental variables.
+
+In practice, these forecasting tools can be “good‑enough” to guide timing decisions while acknowledging that no model perfectly predicts market movements. By combining straightforward statistical methods with thoughtful domain judgment, investors can gain actionable insights without the cost or complexity of advanced methods.
+
+# References
+
+Ngwaba, C. A. (2025). Forecasting covered call exchange‑traded funds (ETFs) using time series, machine learning, and deep learning models. *Journal of Risk and Financial Management, 18*(3), 120. <https://doi.org/10.3390/jrfm18030120>
+
+Pande, N. K., Kumar, A., & Gupta, A. K. (2025). Forecasting stock indices: Stochastic and artificial neural network models. *Computational Economics, 65*(4), 1937–1969. <https://doi.org/10.1007/s10614-024-10615-3>
+
+Shih, K.-H., Wang, Y.-H., Kao, I.-C., & Lai, F.-M. (2024). Forecasting ETF performance: A comparative study of deep learning models and the Fama‑French three‑factor model. *Mathematics, 12*(19), 3158. <https://doi.org/10.3390/math12193158>
+
+Yates, T. (2024, October 3). 4 ways to predict market performance. *Investopedia.* Retrieved July 29, 2025, from <https://www.investopedia.com/articles/07/mean_reversion_martingale.asp>
+
+FactSet. (n.d.). *SPY‑US price history.* Retrieved July 29, 2025, from <https://my.apps.factset.com/workstation/navigator/company-security/price-history/SPY-US>
+
+Federal Reserve Bank of St. Louis. (n.d.). *Consumer Price Index for All Urban Consumers: All items (CPIAUCSL) and Core CPI (CPILFESL) \[Data set\].* FRED. Retrieved July 29, 2025, from <https://fred.stlouisfed.org/graph/?id=CPIAUCSL,CPILFESL>
+
+Lee, S. (2025, March 18). 8 key steps to master exponential smoothing state space modeling. *Number Analytics.* Retrieved July 29, 2025, from <https://www.numberanalytics.com/blog/8-key-steps-to-master-exponential-smoothing-state-space-modeling>
+
+Hyndman, R. J., & Athanasopoulos, G. (2021). *Forecasting: principles and practice* (3rd ed.). OTexts. <https://otexts.com/fpp3/holt.html>
